@@ -15,10 +15,11 @@ type Config struct {
 	DBPassword string
 	DBHost     string
 	DBName     string
+	DBPort     string
 }
 
 func Connect(config Config) *gorm.DB {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect models")

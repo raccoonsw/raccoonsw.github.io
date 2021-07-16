@@ -14,6 +14,7 @@ type Specification struct {
 	DBPassword string `required:"true"`
 	DBHost     string `required:"true"`
 	DBName     string `required:"true"`
+	DBPort     string `required:"true"`
 }
 
 func setupRouter(sqlDB models.DBModel) *gin.Engine {
@@ -37,7 +38,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBName: s.DBName}
+	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBPort: s.DBPort, DBName: s.DBName}
 	sqlDB := models.DBModel{DB: models.Connect(config)}
 	defer sqlDB.Close()
 

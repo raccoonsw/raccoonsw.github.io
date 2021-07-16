@@ -22,7 +22,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBName: s.DBName}
+	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBPort: s.DBPort, DBName: s.DBName}
 	sqlDB = models.DBModel{DB: models.Connect(config)}
 	//defer sqlDB.Close()
 
