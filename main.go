@@ -20,15 +20,15 @@ type Specification struct {
 func setupRouter(sqlDB models.DBModel) *gin.Engine {
 	router := gin.Default()
 	env := &controllers.Env{DBModel: sqlDB}
-	router.GET("/health", env.HealthCheck)
-	router.POST("/item", env.CreateItem)
-	router.PUT("/item/:id", env.UpdateItemById)
-	router.PUT("/item/sku/:sku", env.UpdateItemBySku)
-	router.DELETE("/item/:id", env.DeleteItemById)
-	router.DELETE("/item/sku/:sku", env.DeleteItemBySku)
-	router.GET("/item/:id", env.GetItemById)
-	router.GET("/item/sku/:sku", env.GetItemBySku)
-	router.GET("/items", env.GetAllItems)
+	router.GET("/api/health", env.HealthCheck)
+	router.POST("/api/item", env.CreateItem)
+	router.PUT("/api/item/:id", env.UpdateItemById)
+	router.PUT("/api/item/sku/:sku", env.UpdateItemBySku)
+	router.DELETE("/api/item/:id", env.DeleteItemById)
+	router.DELETE("/api/item/sku/:sku", env.DeleteItemBySku)
+	router.GET("/api/item/:id", env.GetItemById)
+	router.GET("/api/item/sku/:sku", env.GetItemBySku)
+	router.GET("/api/items", env.GetAllItems)
 	return router
 }
 
