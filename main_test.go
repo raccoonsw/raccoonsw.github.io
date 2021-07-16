@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/kelseyhightower/envconfig"
 	"github.com/stretchr/testify/assert"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"restApiProject/models"
@@ -15,7 +17,12 @@ var router *gin.Engine
 var sqlDB models.DBModel
 
 func init() {
-	config := models.Config{User: "root", Password: "g7y48UPH", DBName: "restApi"}
+	var s Specification
+	err := envconfig.Process("restapiproject", &s)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBName: s.DBName}
 	sqlDB = models.DBModel{DB: models.Connect(config)}
 	//defer sqlDB.Close()
 

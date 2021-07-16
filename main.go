@@ -2,9 +2,19 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/kelseyhightower/envconfig"
+	"log"
 	"restApiProject/controllers"
 	"restApiProject/models"
 )
+
+type Specification struct {
+	Port       string `required:"true"`
+	DBUser     string `required:"true"`
+	DBPassword string `required:"true"`
+	DBHost     string `required:"true"`
+	DBName     string `required:"true"`
+}
 
 func setupRouter(sqlDB models.DBModel) *gin.Engine {
 	router := gin.Default()
@@ -22,11 +32,15 @@ func setupRouter(sqlDB models.DBModel) *gin.Engine {
 }
 
 func main() {
-	config := models.Config{User: "root", Password: "g7y48UPH", DBName: "restApi"}
+	var s Specification
+	err := envconfig.Process("restapiproject", &s)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBName: s.DBName}
 	sqlDB := models.DBModel{DB: models.Connect(config)}
 	defer sqlDB.Close()
 
 	router := setupRouter(sqlDB)
-	_ = router.Run()
-	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	_ = router.Run(":" + s.Port)
 }

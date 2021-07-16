@@ -11,13 +11,14 @@ type DBModel struct {
 }
 
 type Config struct {
-	User     string
-	Password string
-	DBName   string
+	DBUser     string
+	DBPassword string
+	DBHost     string
+	DBName     string
 }
 
 func Connect(config Config) *gorm.DB {
-	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", config.User, config.Password, config.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBName)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect models")
@@ -39,7 +40,7 @@ func Connect(config Config) *gorm.DB {
 	return db
 }
 
-func (sqlDB DBModel) ClearTable() {
+func (sqlDB *DBModel) ClearTable() {
 	itemFlag := sqlDB.DB.Migrator().HasTable(&Item{})
 	if itemFlag {
 		err := sqlDB.DB.Migrator().DropTable(&Item{})
@@ -50,7 +51,7 @@ func (sqlDB DBModel) ClearTable() {
 	}
 }
 
-func (sqlDB DBModel) Close() {
+func (sqlDB *DBModel) Close() {
 	db, err := sqlDB.DB.DB()
 	if err != nil {
 		fmt.Println(err)
