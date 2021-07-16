@@ -53,7 +53,7 @@ func ValidatePathSkuJsonItem(c *gin.Context) (models.Item, error) {
 	}
 	var receivedItem struct {
 		Name string  `json:"name" binding:"required,lte=100,ascii"`
-		Type string  `json:"type" binding:"required,oneof=virtual_good virtual_currency bundle"`
+		Type string  `gorm:"not null;type:varchar(100)" json:"type" binding:"required,oneof=virtual_good virtual_currency bundle"`
 		Cost float32 `json:"cost" binding:"required"`
 		//UserId	uint	//`gorm:"not null"`
 	}
@@ -74,16 +74,11 @@ func ValidateJsonItem(c *gin.Context) (models.Item, error) {
 	return receivedItem, err
 }
 
-type Paging struct {
-	Limit  int `form:"limit" binding:"min=1,max=100"`
-	Offset int `form:"offset" binding:"min=0"`
-}
-
-func ValidateQueryPaging(c *gin.Context) (Paging, error) {
-	var paging Paging
-	err := c.BindQuery(&paging)
-	if paging.Limit == 0 {
-		paging.Limit = 30
+func ValidateQueryPaging(c *gin.Context) (models.Filter, error) {
+	var filter models.Filter
+	err := c.BindQuery(&filter)
+	if filter.Limit == 0 {
+		filter.Limit = 30
 	}
-	return paging, err
+	return filter, err
 }

@@ -156,3 +156,18 @@ func TestGetAllItems(t *testing.T) {
 	assert.Equal(t, false, responsePaging2.HasMore)
 	assert.Equal(t, []models.Item{newItem2}, responsePaging2.Items)
 }
+
+func TestGetAllItemsFilter(t *testing.T) {
+	sqlDB.ClearTable()
+	_, _ = sqlDB.CreateItem(models.Item{Sku: "big_rocket", Name: "Big Rocket", Type: "virtual_currency", Cost: 0.5})
+	newItem2, _ := sqlDB.CreateItem(models.Item{Sku: "bla_rocket", Name: "Bla Rocket", Type: "virtual_good", Cost: 1.5})
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/items?type=virtual_good", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	var responsePaging1 Paging
+	_ = json.Unmarshal([]byte(w.Body.String()), &responsePaging1)
+	assert.Len(t, responsePaging1.Items, 1)
+	assert.Equal(t, []models.Item{newItem2}, responsePaging1.Items)
+}

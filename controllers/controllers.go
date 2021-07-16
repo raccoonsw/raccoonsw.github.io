@@ -150,13 +150,13 @@ func (env *Env) GetItemBySku(c *gin.Context) {
 
 // GET /items
 func (env *Env) GetAllItems(c *gin.Context) {
-	var paging validation.Paging
-	paging, err := validation.ValidateQueryPaging(c)
+	var filter models.Filter
+	filter, err := validation.ValidateQueryPaging(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	items, hasMore, err := env.DBModel.GetAllItems(paging.Limit, paging.Offset)
+	items, hasMore, err := env.DBModel.GetAllItems(filter)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return

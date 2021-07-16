@@ -72,6 +72,12 @@ type Item struct {
 	//UserId	uint	//`gorm:"not null"`
 }
 
+type Filter struct {
+	Type   string `form:"type" binding:"omitempty,oneof=virtual_good virtual_currency bundle"`
+	Limit  int    `form:"limit" binding:"omitempty,min=1,max=100"`
+	Offset int    `form:"offset" binding:"omitempty,min=0"`
+}
+
 //func (SubItem) TableName() string {
 //	return "items"
 //}
@@ -113,13 +119,21 @@ func (sqlDB *DBModel) GetItemBySku(sku string) (Item, error) {
 	return newItem, result.Error
 }
 
-func (sqlDB *DBModel) GetAllItems(limit int, offset int) ([]Item, bool, error) {
-	newLimit := limit + 1
+func (sqlDB *DBModel) GetAllItems(filter Filter) ([]Item, bool, error) {
+	newLimit := filter.Limit + 1
 	var items []Item
-	result := sqlDB.DB.Model(&Item{}).Limit(newLimit).Offset(offset).Find(&items)
+	query := sqlDB.DB.Model(&Item{}).Limit(newLimit).Offset(filter.Offset)
+	if filter.Type != "" {
+		query.Where("type = ?", filter.Type)
+	}
+	result := query.Find(&items)
 	hasMore := false
 	if len(items) == newLimit {
 		hasMore = true
 	}
-	return items[0:limit], hasMore, result.Error
+	if len(items) <= filter.Limit {
+		return items, hasMore, result.Error
+	}
+
+	return items[0:filter.Limit], hasMore, result.Error
 }
