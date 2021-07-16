@@ -1,0 +1,472 @@
+swagger: "2.0"
+info:
+  description: This is a simple REST API as a test for Xsolla Bakend School 2021. You can find the full code at [raccoonsw.github.io](https://github.com/raccoonsw/restApiProject).
+  version: "1.0"
+  title: Test Store API
+  contact:
+    email: howimetyou1@mail.ru
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io/docs/specification/2-0/what-is-swagger/
+host: localhost:8080
+basePath: /api
+tags:
+- name: Health
+  description: API call for cheking the service status.
+- name: Items
+  description: API calls for working with items in the store.
+schemes:
+- https
+paths:
+  /healthcheck:
+    get:
+      tags:
+      - Health
+      summary: Check health
+      description: Checks if a running service instance is unable to handle requests.
+      operationId: check-health
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: Server status.
+                example: ok
+  /item:
+    post:
+      tags:
+      - Items
+      summary: Create item
+      description: Creates an item in the store.
+      operationId: create-item
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        schema:
+          $ref: "#/definitions/ItemWithoutId"
+        required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Item ID.
+                format: int32
+                x-nullable: false
+                example: 1
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+  /item/{id}:
+    get:
+      tags:
+      - Items
+      summary: Get item by ID
+      description: Gets item info by the specified ID.
+      operationId: get-item-by-id
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Item ID.
+        required: true
+        x-nullable: false
+        type: integer
+        format: int32
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Item"
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        404:
+          description: Not Found
+          schema:
+            $ref: "#/definitions/Error404"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+      - Items
+      summary: Update item by ID
+      description: Updates item info by the specified ID.
+      operationId: update-item-by-id
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Item ID.
+        required: true
+        x-nullable: false
+        type: integer
+        format: int32
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/ItemWithoutId"
+        required: true
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        404:
+          description: Not Found
+          schema:
+            $ref: "#/definitions/Error404"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - Items
+      summary: Delete item by ID
+      description: Deletes item by the specified ID.
+      operationId: delete-item-by-id
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Item ID.
+        required: true
+        x-nullable: false
+        type: integer
+        format: int32
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        404:
+          description: Not Found
+          schema:
+            $ref: "#/definitions/Error404"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+  /item/sku/{sku}:
+    get:
+      tags:
+      - Items
+      summary: Get item by SKU
+      description: Gets item info by the specified SKU.
+      operationId: get-item-by-sku
+      produces:
+      - application/json
+      parameters:
+      - name: sku
+        in: path
+        description: Unique item ID. The SKU may only contain lowercase Latin alphanumeric characters, periods, dashes, and underscores.
+        x-nullable: false
+        pattern: ^[a-z0-9_.-]*$
+        maxLength: 100
+        required: true
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Item"
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        404:
+          description: Not Found
+          schema:
+            $ref: "#/definitions/Error404"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+      - Items
+      summary: Update item by SKU
+      description: Updates item info by the specified SKU.
+      operationId: update-item-by-sku
+      produces:
+      - application/json
+      parameters:
+      - name: sku
+        in: path
+        description: Unique item ID. The SKU may only contain lowercase Latin alphanumeric characters, periods, dashes, and underscores.
+        x-nullable: false
+        pattern: ^[a-z0-9_.-]*$
+        maxLength: 100
+        required: true
+        type: string
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/ItemWithoutIdSku"
+        required: true
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        404:
+          description: Not Found
+          schema:
+            $ref: "#/definitions/Error404"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - Items
+      summary: Delete item by SKU
+      description: Deletes item by the specified SKU.
+      operationId: delete-item-by-sku
+      produces:
+      - application/json
+      parameters:
+      - name: sku
+        in: path
+        description: Unique item ID. The SKU may only contain lowercase Latin alphanumeric characters, periods, dashes, and underscores.
+        x-nullable: false
+        pattern: ^[a-z0-9_.-]*$
+        maxLength: 100
+        required: true
+        type: string
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        404:
+          description: Not Found
+          schema:
+            $ref: "#/definitions/Error404"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+  /items:
+    get:
+      tags:
+      - Items
+      summary: Get items
+      description: Gets a list of items. To use this call to filter elements, specify the item type.
+      operationId: get-items
+      produces:
+      - application/json
+      parameters:
+      - name: limit
+        in: query
+        description: Maximum number of elements that are returned per call.
+        type: integer
+        format: int32
+        default: 30
+        minimum: 1
+        maximum: 100
+      - name: offset
+        in: query
+        description: Number of the elements from which the list is generated.
+        type: string
+        minimum: 0
+        default: 0
+      - name: type
+        in: query
+        description: Item type.
+        type: string
+        enum:
+          - virtual_good
+          - virtual_currency
+          - bundle
+      responses:
+        200:
+          description: OK
+          schema:
+              $ref: "#/definitions/GetItems"
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/Error400"
+        422:
+          description: Unprocessable Entity
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  ItemWithoutIdSku:
+    description: Item data without an item `id` and `sku`.
+    required:
+      - name
+      - type
+      - cost
+    type: object
+    properties:
+      name:
+        type: string
+        description: Item name.
+        x-nullable: false
+        maxLength: 100
+        example: Big Rocket
+      type:
+        type: string
+        description: Item type.
+        x-nullable: false
+        example: virtual_good
+        enum:
+          - virtual_good
+          - virtual_currency
+          - bundle
+      cost:
+        type: number
+        description: Item price.
+        x-nullable: false
+        example: 100.99
+  ItemWithoutId:
+    description: Item data without an item `id`.
+    required:
+      - sku
+      - name
+      - type
+      - cost
+    type: object
+    properties:
+      sku:
+        type: string
+        description: "Unique item ID. The SKU only contains lowercase Latin alphanumeric characters, periods, dashes, and underscores."
+        x-nullable: false
+        pattern: ^[a-z0-9_.-]*$
+        maxLength: 100
+        example: big_rocket
+      name:
+        type: string
+        description: Item name.
+        x-nullable: false
+        maxLength: 100
+        example: Big Rocket
+      type:
+        type: string
+        description: Item type.
+        x-nullable: false
+        example: virtual_good
+        enum:
+          - virtual_good
+          - virtual_currency
+          - bundle
+      cost:
+        type: number
+        description: Item price.
+        x-nullable: false
+        example: 100.99
+  Item:
+    description: Item data.
+    required:
+      - id
+      - sku
+      - name
+      - type
+      - cost
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Item ID.
+        format: int32
+        x-nullable: false
+        example: 1
+      sku:
+        type: string
+        description: Unique item ID. The SKU may only contain lowercase Latin alphanumeric characters, periods, dashes, and underscores.
+        x-nullable: false
+        pattern: ^[a-z0-9_.-]*$
+        maxLength: 100
+        example: big_rocket
+      name:
+        type: string
+        description: Item name.
+        x-nullable: false
+        maxLength: 100
+        example: Big Rocket
+      type:
+        type: string
+        description: Item type.
+        x-nullable: false
+        example: virtual_good
+        enum:
+          - virtual_good
+          - virtual_currency
+          - bundle
+      cost:
+        type: number
+        description: Item price.
+        x-nullable: false
+        example: 100.99
+
+  GetItems:
+    description: Item data.
+    type: object
+    required:
+    - has_more
+    - items
+    properties:
+      has_more:
+        type: boolean
+        description: Shows whether there are more elements to get or not.
+        example: true
+      items:
+        type: array
+        description: List of items data.
+        items:
+          $ref: "#/definitions/Item"
+  Error400:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Error description.
+        example: Parameter sku should contain lowercase Latin alphanumeric characters, periods, dashes, and underscores.
+  Error404:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Error description.
+        example: Record not found.
+  Error:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Error description.
+        example: Internal error occurred. Try again later.
