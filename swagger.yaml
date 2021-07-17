@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: This is a simple REST API as a test for Xsolla Bakend School 2021. You can find the full code at [raccoonsw.github.io](https://github.com/raccoonsw/restApiProject).
+  description: This is a simple REST API as a test for Xsolla Bakend School 2021. You can find the full code at [raccoonsw.github.io](https://github.com/raccoonsw/raccoonsw.github.io).
   version: "1.0"
   title: Test Store API
   contact:
