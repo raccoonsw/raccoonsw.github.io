@@ -42,7 +42,7 @@ func TestCreateItem(t *testing.T) {
 	sqlDB.ClearTable()
 	w := httptest.NewRecorder()
 	var jsonData = []byte(`{"sku": "big_rocket", "name": "Big Rocket", "type": "virtual_currency", "cost": 0.5}`)
-	req, _ := http.NewRequest("POST", "/api/item", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("POST", "/api/items", bytes.NewBuffer(jsonData))
 	req.Header.Add("Content-Type", "application/json")
 	router.ServeHTTP(w, req)
 
@@ -56,7 +56,7 @@ func TestUpdateItemById(t *testing.T) {
 	newItem, _ := sqlDB.CreateItem(item)
 	w := httptest.NewRecorder()
 	var jsonData = []byte(`{"sku": "bla_rocket", "name": "Bla Rocket", "type": "virtual_good", "cost": 1.5}`)
-	req, _ := http.NewRequest("PUT", "/api/item/1", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("PUT", "/api/items/1", bytes.NewBuffer(jsonData))
 	req.Header.Add("Content-Type", "application/json")
 	router.ServeHTTP(w, req)
 
@@ -73,7 +73,7 @@ func TestUpdateItemBySku(t *testing.T) {
 	newItem, _ := sqlDB.CreateItem(item)
 	w := httptest.NewRecorder()
 	var jsonData = []byte(`{"name": "Bla Rocket", "type": "virtual_good", "cost": 1.5}`)
-	req, _ := http.NewRequest("PUT", "/api/item/sku/big_rocket", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("PUT", "/api/items/sku/big_rocket", bytes.NewBuffer(jsonData))
 	req.Header.Add("Content-Type", "application/json")
 	router.ServeHTTP(w, req)
 
@@ -89,7 +89,7 @@ func TestDeleteItemById(t *testing.T) {
 	item := models.Item{Sku: "big_rocket", Name: "Big Rocket", Type: "virtual_currency", Cost: 0.5}
 	_, _ = sqlDB.CreateItem(item)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("DELETE", "/api/item/1", nil)
+	req, _ := http.NewRequest("DELETE", "/api/items/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNoContent, w.Code)
@@ -100,7 +100,7 @@ func TestDeleteItemBySku(t *testing.T) {
 	item := models.Item{Sku: "big_rocket", Name: "Big Rocket", Type: "virtual_currency", Cost: 0.5}
 	_, _ = sqlDB.CreateItem(item)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("DELETE", "/api/item/sku/big_rocket", nil)
+	req, _ := http.NewRequest("DELETE", "/api/items/sku/big_rocket", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNoContent, w.Code)
@@ -111,7 +111,7 @@ func TestGetItemById(t *testing.T) {
 	item := models.Item{Sku: "big_rocket", Name: "Big Rocket", Type: "virtual_currency", Cost: 0.5}
 	newItem, _ := sqlDB.CreateItem(item)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/item/1", nil)
+	req, _ := http.NewRequest("GET", "/api/items/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -124,7 +124,7 @@ func TestGetItemBySku(t *testing.T) {
 	item := models.Item{Sku: "big_rocket", Name: "Big Rocket", Type: "virtual_currency", Cost: 0.5}
 	newItem, _ := sqlDB.CreateItem(item)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/item/sku/big_rocket", nil)
+	req, _ := http.NewRequest("GET", "/api/items/sku/big_rocket", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)

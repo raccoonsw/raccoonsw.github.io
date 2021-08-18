@@ -126,6 +126,7 @@ func (env *Env) GetItemById(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
+	c.Header("cache-control", "no-cache, no-store, must-revalidate")
 	c.JSON(http.StatusOK, item)
 }
 
@@ -145,6 +146,7 @@ func (env *Env) GetItemBySku(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
+	c.Header("cache-control", "no-cache, no-store, must-revalidate")
 	c.JSON(http.StatusOK, item)
 }
 
@@ -161,6 +163,7 @@ func (env *Env) GetAllItems(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
+	c.Header("cache-control", "no-cache, no-store, must-revalidate")
 	c.Header("has-more", strconv.FormatBool(hasMore))
 	c.JSON(http.StatusOK, gin.H{"has_more": hasMore, "items": items})
 }

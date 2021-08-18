@@ -21,13 +21,13 @@ func setupRouter(sqlDB models.DBModel) *gin.Engine {
 	router := gin.Default()
 	env := &controllers.Env{DBModel: sqlDB}
 	router.GET("/api/health", env.HealthCheck)
-	router.POST("/api/item", env.CreateItem)
-	router.PUT("/api/item/:id", env.UpdateItemById)
-	router.PUT("/api/item/sku/:sku", env.UpdateItemBySku)
-	router.DELETE("/api/item/:id", env.DeleteItemById)
-	router.DELETE("/api/item/sku/:sku", env.DeleteItemBySku)
-	router.GET("/api/item/:id", env.GetItemById)
-	router.GET("/api/item/sku/:sku", env.GetItemBySku)
+	router.POST("/api/items", env.CreateItem)
+	router.PUT("/api/items/:id", env.UpdateItemById)
+	router.PUT("/api/items/sku/:sku", env.UpdateItemBySku)
+	router.DELETE("/api/items/:id", env.DeleteItemById)
+	router.DELETE("/api/items/sku/:sku", env.DeleteItemBySku)
+	router.GET("/api/items/:id", env.GetItemById)
+	router.GET("/api/items/sku/:sku", env.GetItemBySku)
 	router.GET("/api/items", env.GetAllItems)
 	return router
 }
