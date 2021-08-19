@@ -65,6 +65,7 @@ paths:
                 description: Item ID.
                 format: int32
                 x-nullable: false
+                minimum: 1
                 example: 1
         400:
           description: Bad Request
@@ -91,6 +92,7 @@ paths:
         x-nullable: false
         type: integer
         format: int32
+        minimum: 1
       responses:
         200:
           description: OK
@@ -160,6 +162,7 @@ paths:
         x-nullable: false
         type: integer
         format: int32
+        minimum: 1
       responses:
         204:
           description: No Content
@@ -404,6 +407,7 @@ definitions:
         description: Item ID.
         format: int32
         x-nullable: false
+        minimum: 1
         example: 1
       sku:
         type: string

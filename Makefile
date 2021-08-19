@@ -1,5 +1,5 @@
 test:
-	export `cat .env` && go test
+	export `cat .env` && cd cmd/restapi && go test
 
 run:
-	export `cat .env` && go run main.go
+	export `cat .env` && go run cmd/restapi/main.go

@@ -9,12 +9,13 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"restApiProject/database"
 	"restApiProject/models"
 	"testing"
 )
 
 var router *gin.Engine
-var sqlDB models.DBModel
+var sqlDB database.DBModel
 
 func init() {
 	var s Specification
@@ -23,10 +24,10 @@ func init() {
 		log.Fatal(err.Error())
 	}
 	config := models.Config{DBUser: s.DBUser, DBPassword: s.DBPassword, DBHost: s.DBHost, DBPort: s.DBPort, DBName: s.DBName}
-	sqlDB = models.DBModel{DB: models.Connect(config)}
+	sqlDB = database.DBModel{DB: database.Connect(config)}
 	//defer sqlDB.Close()
 
-	router = setupRouter(sqlDB)
+	router = setupRouter(&sqlDB)
 }
 
 func TestPingRoute(t *testing.T) {

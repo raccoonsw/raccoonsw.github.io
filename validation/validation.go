@@ -15,9 +15,9 @@ func isSku(str string) error {
 	return nil
 }
 
-func ValidatePathId(c *gin.Context) (uint, error) {
+func ValidatePathId(c *gin.Context) (int, error) {
 	var id struct {
-		Id uint `uri:"id" binding:"required"`
+		Id int `uri:"id" binding:"required,gte=1"`
 	}
 	err := c.BindUri(&id)
 	return id.Id, err
@@ -74,8 +74,8 @@ func ValidateJsonItem(c *gin.Context) (models.Item, error) {
 	return receivedItem, err
 }
 
-func ValidateQueryPaging(c *gin.Context) (models.Filter, error) {
-	var filter models.Filter
+func ValidateQueryPaging(c *gin.Context) (models.Paging, error) {
+	var filter models.Paging
 	err := c.BindQuery(&filter)
 	if filter.Limit == 0 {
 		filter.Limit = 30

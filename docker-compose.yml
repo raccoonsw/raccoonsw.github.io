@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: '3'
 services:
   web:
     container_name: golang
@@ -11,8 +11,8 @@ services:
     environment:
       RESTAPIPROJECT_DBHOST: mysql
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
+    restart: on-failure
     networks:
       - appnet
 
@@ -22,12 +22,8 @@ services:
     ports:
       - 3307:3306
     environment:
-      MYSQL_ROOT_PASSWORD: g7y48UPH
+      MYSQL_ROOT_PASSWORD: g7y48UPH!
       MYSQL_DATABASE: restApi
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 2s
-      retries: 20
     networks:
       - appnet
 
