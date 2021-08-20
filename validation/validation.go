@@ -74,6 +74,12 @@ func ValidateJsonItem(c *gin.Context) (models.Item, error) {
 	return receivedItem, err
 }
 
+func ValidateJsonOrder(c *gin.Context) (models.Order, error) {
+	var receivedOrder models.Order
+	err := c.Bind(&receivedOrder)
+	return receivedOrder, err
+}
+
 func ValidateQueryPaging(c *gin.Context) (models.Paging, error) {
 	var filter models.Paging
 	err := c.BindQuery(&filter)

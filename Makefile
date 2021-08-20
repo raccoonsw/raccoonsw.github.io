@@ -1,5 +1,8 @@
 test:
-	export `cat .env` && cd cmd/restapi && go test
+	cd cmd/rest_api && export `cat .env` && go test
 
 run:
-	export `cat .env` && go run cmd/restapi/main.go
+	cd cmd/rest_api && export `cat .env` && go run main.go
+
+run_grpc:
+	cd cmd/grpc && export `cat .env` && go run main.go

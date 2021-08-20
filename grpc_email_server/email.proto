@@ -1,0 +1,15 @@
+syntax = "proto3";
+package grpc_email_server;
+
+service EmailService {
+  rpc Send(Request) returns (Response) {}
+}
+message Request {
+  int64 orderId = 1;
+  int64 itemId = 2;
+  string email = 3;
+}
+
+message Response {
+  string response = 1;
+}

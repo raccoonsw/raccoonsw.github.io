@@ -1,7 +1,6 @@
 package database
 
 import (
-	"gorm.io/gorm"
 	"restApiProject/models"
 )
 
@@ -14,10 +13,6 @@ type ItemsInterface interface {
 	GetItemById(int) (models.Item, error)
 	GetItemBySku(string) (models.Item, error)
 	GetAllItems(models.Paging) ([]models.Item, bool, error)
-}
-
-type DBModel struct {
-	DB *gorm.DB
 }
 
 func (sqlDB *DBModel) CreateItem(item models.Item) (models.Item, error) {

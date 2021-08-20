@@ -21,12 +21,15 @@ func Connect(config models.Config) *gorm.DB {
 	//userFlag := db.Migrator().h.HasTable(&User{})
 	itemFlag := db.Migrator().HasTable(&models.Item{})
 	if !itemFlag {
-		////err = sqlDB.AutoMigrate(&User{}, &Item{})
-		//err = sqlDB.Migrator().CreateTable(&User{})
-		//if err != nil {
-		//	panic("failed to create Users table in models")
-		//}
 		err = db.Migrator().CreateTable(&models.Item{})
+		if err != nil {
+			panic("failed to create Items table in models")
+		}
+	}
+
+	orderFlag := db.Migrator().HasTable(&models.Order{})
+	if !orderFlag {
+		err = db.Migrator().CreateTable(&models.Order{})
 		if err != nil {
 			panic("failed to create Items table in models")
 		}

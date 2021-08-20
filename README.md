@@ -5,6 +5,7 @@
 * [Возможности проекта](#project-features)
     * [REST API](#project-features-rest-api)
     * [GraphQL](#project-features-graphql)
+    * [gRPC](#project-features-grpc)
 * [Локальный запуск](#run-local-app)
     * [Структура](#run-local-app-no-docker)
     * [Структура](#run-local-app-docker)
@@ -13,21 +14,23 @@
 <a name="project-structure"></a>
 ## Структура проекта
 Проект состоит из следующих директорий и файлов:
-* `cmd`.
+* `cmd`:
+    * `grpc` — сервис по отправке письма о заказе товара. Содержит файлы `.env` и `main.go`.
+    * `rest_api` — приложение для работы с товарами. Содержит файлы `.env`, `main.go` и `main_test.go`.
 * `database` — методы по работе с базой данных.
-* `handlers` — методы API.
+* `grpc_email_client` — передача данных из приложения в сервис `grpc`.
+* `grpc_email_server` — подготавливает письмо и отправляет его по протоколу SMTP.
+* `handlers` — методы REST API и GraphQL.
 * `models` — объекты базы данных и приложения.
-* `validation` — методы валидации входных параметров методов API.
+* `validation` — методы валидации входных параметров методов REST API.
 * `vendor`, `go.mod` и `go.sum` — зависимости, необходимые для работы приложения.
-* `.env` — переменные окружения.
 * `Makefile` — команды для локального запуска приложения и тестов.
-* `main.go` — точка входа в приложение.
-* `main_test.go` — тесты для проверки работоспособности методов API.
-* `Dockerfile` и `docker-compose.yml` — работа с докером.
-* `index.html` и `swagger.yaml` — документация API.
+* `docker-compose.yml`, `Dockerfile.grpc` и `Dockerfile.web` — работа с докером.
+* `index.html` и `swagger.yaml` — документация REST API.
 
 <a name="project-features"></a>
 ## Возможности проекта
+
 <a name="project-features-rest-api"></a>
 ### REST API
 Список реализованных методов и их описания можно узнать в [документации API](https://raccoonsw.github.io/).
@@ -37,8 +40,10 @@
 Реализованы методы по работе с данными приложения с помощью GraphQL. Endpoint: `/api/graphql`.
 
 * Добавление товара в каталог  
-Пример запроса:
+  Пример запроса:
 ```graphql
+POST /api/graphql HTTP/1.1
+
 mutation {
     insertItem(sku: "blabla", name: "wow bla", type: "virtual_good", cost: 1.05) {
         id
@@ -47,8 +52,10 @@ mutation {
 ```
 
 * Получение информации о товаре по его идентификатору  
-Пример запроса:
+  Пример запроса:
 ```graphql
+POST /api/graphql HTTP/1.1
+
 query {
     getItem(id: 1) {
         id
@@ -59,9 +66,35 @@ query {
     }
 }
 ```
+<a name="project-features-grpc"></a>
+### gRPC
+Реализован сервис по отправке письма о заказе товара. Endpoint: `/api/orders`.
+
+Чтобы использовать сервис, укажите в файле `/cmd/grpc/.env` значение переменных:
+* `GRPC_USEREMAIL` — email-адрес пользователя, от чъего имени отправляется письмо.
+* `GRPC_USERPASSWORD` — пароль для указанного email-адреса.
+
+Работа сервиса проверялась с помощью почтового сервиса Gmail. Для корректной работы через Gmail может потребоваться настройка:
+1. Войдите в учетную запись Gmail.
+2. Перейдите по ссылке `https://www.google.com/settings/security/lesssecureapps`.
+3. Установите переключатель **Небезопасные приложения разрешены** в активное положение.
+4. Если это не решило проблему, можно попробовать [другие предложенные решения](https://serverfault.com/questions/635139/how-to-fix-send-mail-authorization-failed-534-5-7-14).
+
+Пример запроса:
+```http request
+POST /api/orders HTTP/1.1
+Host: localhost
+Content-Type: application/json
+
+{
+    "item_id": 1,
+    "email": "email.to.this.user@gmail.com"
+}
+```
 
 <a name="run-local-app"></a>
 ## Локальный запуск
+
 <a name="run-local-app-no-docker"></a>
 ### Без докера
 Чтобы локально запустить приложение:

@@ -1,0 +1,11 @@
+FROM golang:alpine
+
+WORKDIR /go/src/app
+
+ADD . .
+
+RUN cd cmd/grpc && go build -o ./app
+
+EXPOSE 9000
+
+CMD ["./cmd/grpc/app"]

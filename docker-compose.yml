@@ -3,16 +3,32 @@ version: '3'
 services:
   web:
     container_name: golang
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile.web
     ports:
       - "8080:8080"
     env_file:
-      - .env
+      - cmd/rest_api/.env
     environment:
-      RESTAPIPROJECT_DBHOST: mysql
+      REST_API_DBHOST: mysql
+      REST_API_GRPCHOST: grpc
     depends_on:
       - mysql
+      - grpc
     restart: on-failure
+    networks:
+      - appnet
+
+  grpc:
+    container_name: golang_grpc
+    build:
+      context: .
+      dockerfile: ./Dockerfile.grpc
+    ports:
+      - "9000:9000"
+    env_file:
+      - cmd/grpc/.env
     networks:
       - appnet
 
