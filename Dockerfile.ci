@@ -1,0 +1,8 @@
+FROM golang:latest
+
+WORKDIR /go/src/app
+
+ADD . .
+
+CMD cd cmd/rest_api && go test
+
