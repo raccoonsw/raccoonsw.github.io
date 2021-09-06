@@ -1,0 +1,31 @@
+---
+version: '3'
+services:
+#  web-ci:
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile.ci
+#    environment:
+#      REST_API_DBHOST: mysql-ci
+#    env_file:
+#      - cmd/rest_api/.env
+#    depends_on:
+#      - mysql-ci
+#    restart: on-failure
+#    networks:
+#      - appnet-ci
+
+  mysql-ci:
+    image: mysql
+    container_name: mysql-ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: g7y48UPH!
+      MYSQL_DATABASE: restApi
+    networks:
+      - appnet-ci
+
+networks:
+  appnet-ci:
+    driver: bridge

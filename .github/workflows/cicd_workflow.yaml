@@ -1,0 +1,21 @@
+name: Go
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.2
+      - name: Docker up
+        run: make docker-up
+      - name: Test
+        run: make test
+      - name: Docker stop
+        if: always()
+        run: make docker-down
