@@ -1,0 +1,80 @@
+---
+id: payments
+hide_title: true
+custom_edit_url: null
+---
+
+````mdx-code-block
+import APITable from '@site/src/components/APITable';
+
+<span
+  className={"theme-doc-version-badge badge badge--secondary"}
+  children={"Version: 1.0.0"}
+>
+</span>
+
+# Payments Overview
+
+## Методы Sber API для работы с платежными поручениями
+
+* [Создание рублевого платежного поручения](https://developers.sber.ru/docs/ru/sber-api/specifications/payments/create-payment)
+* [Получение статуса рублевого платежного поручения](https://developers.sber.ru/docs/ru/sber-api/specifications/payments/get-payment-state)
+* [Получение платежного поручения](https://developers.sber.ru/docs/ru/sber-api/specifications/payments/get-payment)
+* [Выставление счета на оплату по фиксированным реквизитам](https://developers.sber.ru/docs/ru/sber-api/specifications/payments/create-payment-from-invoice)
+* [Выставление счета на оплату по свободным реквизитам](https://developers.sber.ru/docs/ru/sber-api/specifications/payments/create-payment-from-invoice-any)
+* [Выставление счета на оплату в бюджет](https://developers.sber.ru/docs/ru/sber-api/specifications/payments/create-payment-from-invoice-budget)
+
+## URL для обращения к ресурсу
+
+* Тестовый контур `https://iftfintech.testsbi.sberbank.ru:9443`
+* Промышленный контур `https://fintech.sberbank.ru:9443`
+
+## Дайджесты запросов
+
+Дайджест это текстовый документ, содержащий перечень и значения полей запроса, к которому он относится и предназначенный для подписания ЭЦП. Сохраняйте порядок и количество полей дайджеста, как показано в примере ниже, иначе подписать его не получится.
+
+Формат дайджеста запроса на <a href="https://developers.sber.ru/docs/ru/sber-api/specifications/payments/create-payment">создание рублевого платежного поручения</a>:
+
+<APITable>
+| Наименование поля                   | Описание поля                                | Пример                           |
+| :---------------------------------- | :------------------------------------------- | :------------------------------- |
+| amount                              | Сумма платежа                                | 100.00                           |
+| date                                | Дата составления документа                   | 2018-05-31                       |
+| departmentalInfo.docNumber108       | Номер налогового документа(реквизит-108)     | 123                              |
+| departmentalInfo.drawerStatus101    | Показатель статуса налогоплательщика(реквизит-101) | 01                               |
+| departmentalInfo.kbk                | Код бюджетной классификации(реквизит-104)    | 18210102010011000110             |
+| departmentalInfo.oktmo              | Код ОКТМО(реквизит-105)                      | 1701000                          |
+</APITable>
+
+Пример:
+
+```json
+amount=100.00
+date=2018-05-31
+departmentalInfo.docNumber108=123
+departmentalInfo.drawerStatus101=01
+departmentalInfo.kbk=18210102010011000110
+departmentalInfo.oktmo=01701000
+departmentalInfo.paymentKind110=НС
+departmentalInfo.reasonCode106=ТП
+departmentalInfo.uip=0
+externalId=a0000000-0000-0000-0000-000000000001
+incomeTypeCode=2
+operationCode=01
+payeeAccount=40702810600100001212
+payeeBankBic=044525225
+payeeBankCorrAccount=30101810400000000225
+payeeInn=222201236445
+payeeKpp=222201001
+payeeName=Общество с ограниченной ответственностью "Получатель"
+payerAccount=40702810500006103990
+payerBankBic=044525225
+payerBankCorrAccount=30101810400000000225
+payerInn=222201236445
+payerKpp=222201001
+payerName=Общество с ограниченной ответственностью "Клиент"
+priority=5
+purpose=Оплата интернет заказа №123. НДС нет.
+voCode=61150
+```
+````
